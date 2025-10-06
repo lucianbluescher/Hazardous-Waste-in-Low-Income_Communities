@@ -1,0 +1,71 @@
+---
+title: "ej_screen"
+format: html
+---
+
+```{r}
+rm(list=ls())
+
+# Library Required packages
+library(tidyverse)
+library(sf)
+library(here)
+library(sf) # for vector data (more soon!)
+library(stars) # for raster data (more soon!)
+library(tmap) # for static and interactive maps
+
+# read in geodatabase of EJScreen data at the Census Block Group level
+ejscreen <- sf::st_read(here::here("data", "ejscreen","EJSCREEN_2023_BG_StatePct_with_AS_CNMI_GU_VI.gdb")) 
+
+# filter to a state you are interested in
+california <- ejscreen %>%
+  dplyr::filter(ST_ABBREV == "CA") 
+
+# filter to a county you are interested in
+plumas <- ejscreen %>%
+  dplyr::filter(CNTY_NAME %in% c("Plumas County"))
+
+# find the average values for all variables within counties
+california_counties <- aggregate(california, by = list(california$CNTY_NAME), FUN = mean)
+```
+
+# Data Exploration
+
+```{r}
+class(san_francisco)
+sapply(san_francisco, class)
+```
+
+
+# Mapping with t-map
+
+
+```{r}
+tm_shape(plumas) +
+  #  First layer of People of Color Percentiles
+  tm_polygons(
+    col = "PEOPCOLORPCT",
+    fill.legend  = tm_legend(title = "Percentiles of People of Color"),
+    fill.scale = tm_scale(values = "brewer.purples"),
+    labels = c("0-9%", "10-19%", "20-29%", "30-40%")
+  ) + 
+  # Second layer bubbles represeting wastewater discharge EJ Index
+  tm_bubbles(
+    size = "D2_PWDIS",
+    shape = 1,     
+    border.col = "yellow",
+    title.size = "Wastewater Discharge EJ Index"
+  ) +
+
+  # 3. Map Furniture and Layout
+  tm_title(text =
+    "Wasterwater of Plumas County 
+    On People of Color (POC)"
+  ) +
+  # Add compass and scale bar
+tm_compass(
+    position = tm_pos_in("right", "top")
+  ) +
+  tm_scalebar(
+    position = tm_pos_in("left", "bottom")
+  )
