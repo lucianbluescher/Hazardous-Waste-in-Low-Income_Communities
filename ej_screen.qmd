@@ -1,16 +1,19 @@
 ---
 title: "Homework 1"
 subtitle: "Identifying Hazardous Waste concentration in Low income communites in Plumas County"
+date: "10/22/25"
+author: "Lucian Scher"
 format: pdf
+warnings: false
 ---
 
-Lucian Scher
+This projects goal is to identify the relationship between Hazardous Waste and Low income communities in Plumas County using data from the US Environmental Protection Agency's EJScreen mapping tool.
 
-This projects goal is to identify the relationship between Hazardous Waste and Low income communities in Plumas County.
+## 1. Load Packages
 
-# Load Packages
-
-```{r, message = FALSE}
+```{r}
+#| message: false
+#| warning: false
 # First library required packages
 library(tidyverse)
 library(sf)
@@ -20,26 +23,26 @@ library(stars) # for raster data (more soon!)
 library(tmap) # for static and interactive maps
 ```
 
-# Import Data
+## 2. Import Data
 
 ```{r}
+#| message: false
+#| warning: false
 # read in geodatabase of EJScreen data at the Census Block Group level
 ejscreen <- sf::st_read(here::here("data", "ejscreen","EJSCREEN_2023_BG_StatePct_with_AS_CNMI_GU_VI.gdb")) 
 
 ```
 
-# Filter data to Plumas County in CA
-
-Set `message = FALSE` to hide unknown warning message
+## 3. Selecting County in CA
 
 ```{r}
 #| warning: false
 
-# filter to a California
+# filter to California
 california <- ejscreen %>%
   dplyr::filter(ST_ABBREV == "CA") 
 
-# filter to a Plumas County
+# filter to Plumas County
 plumas <- ejscreen %>%
   dplyr::filter(CNTY_NAME %in% c("Plumas County"))
 
@@ -47,19 +50,21 @@ plumas <- ejscreen %>%
 california_counties <- aggregate(california, by = list(california$CNTY_NAME), FUN = mean)
 ```
 
+## 4. Data Exploration
+
 ```{r, include=FALSE}
 #class(plumas)
 #sapply(plumas, class)
 ```
 
 ```{r, include=FALSE}
-
   # Rename columns because I cant get my legend titles to work
 print(colnames(plumas))
 
 names(plumas)[15] <- "People of Color Percentile"
 
 names(plumas)[67] <- "Wastewater Discharge"
+
 
  # Add second layer bubbles representing waste water discharge
  # tm_bubbles(
@@ -70,31 +75,33 @@ names(plumas)[67] <- "Wastewater Discharge"
    # fill.legend = tm_legend(title = "Wastewater Discharge"))
 ```
 
-# Visualize data using the tmap Package
+## 5. Visualize data using the tmap Package
 
-## Map 1: Percentage of low income people
+### Map 1: Percentage of low income people
 
 ```{r}
 map1 <- tm_shape(plumas) +
-  # Percentage of low income people
+  tm_graticules() +
+  # Add Percentage of low income people shape
   tm_polygons(
     fill = "LOWINCPCT",
-    fill.legend = tm_legend(title = "Low Income total out of 1"),
+    fill.legend = tm_legend(title = "Ratio of Low Income People"),
     col = "gray70") +
   # Compass and Scale bar
   tm_compass(position = tm_pos_in("right", "top")) +
   tm_scalebar(position = tm_pos_in("center", "top")) +
   # Title
   tm_title(
-    text = "Low Income People in Plumas County",
+    text = "Map 1: Low Income People in Plumas County",
     size = 1.1
   )
 
 ```
 
-## Map 2: Proximity to Hazardous Waste
+### Map 2: Proximity to Hazardous Waste
 
 ```{r}
+# Add proximity to hazardous waste shape
 map2 <- tm_shape(plumas) +
   tm_graticules() +
   tm_polygons(
@@ -103,19 +110,25 @@ map2 <- tm_shape(plumas) +
   col = "gray70") +
 # Title 
 tm_title(
-    text = "Proximity to Hazardous Waste in Plumas County",
+    text = "Map 2: Proximity to Hazardous Waste in Plumas County",
     size = 1.2
   )
 ```
 
-## Side by side comparison of maps
+## 6. Side by Side map comparison
 
 ```{r}
 tmap_arrange(map1, map2, ncol = 2)
 ```
 
-This side by side comparison of Plumas county shows the relationship between low income and hazardous waste. The dark blue area in the middle of both maps represents the town of Quincy, an area that much of the county industry, waste management and as shown, low income population are located in. What we can learn from this is how environmental injustices sometimes occur because the areas where communities put their undesirable necessities such as hazardous waste, are also where the cheapest housing is generally available. While Plumas county contains other areas with large populations of low income people, Quincy is the only area where low income is the majority, as well as where people are living the closest to hazardous waste.
+## 7. Map Interpretation
 
-# Data Citation
+This side by side comparison of Plumas county shows the relationship between low income and hazardous waste. The dark blue area in the middle of both maps represents the town of Quincy, an area that much of the county industry, waste management and as shown, low income population are located in.
+
+Residents of low-income areas such as Quincy, suffer a greater burden of hazardous waste and pollution. Much of the time industry and waste management facilities choose undesirable sites in communities with lesser resources to mount an effective challenge. The lack of political influence and financial resources make low income areas vulnerable, ultimately leading to the environmental injustice of, in this case, unfair proximity to hazardous waste.
+
+While Plumas county contains other areas with large populations of low income people, Quincy is the only area where low income is the majority, as well as where people are living the closest to hazardous waste.
+
+## Data Citation
 
 United States Environmental Protection Agency. 2015. EJSCREEN. Retrieved: 10/5/2025, from data file given by EDS 223 instructors.
