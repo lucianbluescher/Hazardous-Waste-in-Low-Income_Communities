@@ -9,6 +9,8 @@ warnings: false
 
 This projects goal is to identify the relationship between Hazardous Waste and Low income communities in Plumas County using data from the US Environmental Protection Agency's EJScreen mapping tool.
 
+GitHub Repository: <https://github.com/lucianbluescher/Hazardous-Waste-in-Low-Income_Communities>
+
 ## 1. Load Packages
 
 ```{r}
