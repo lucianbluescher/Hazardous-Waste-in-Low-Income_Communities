@@ -6,7 +6,7 @@ This repository contains the first EDS 223; Geospatial Analysis & Remote Sensing
 
 ### Data Access
 
-The data is from the United States Environmental Protection Agencys Environmental Justice mapping tool Ejscreen, and can be found in the data folder in this repository. 
+The data is publicly available from the United States Environmental Protection Agencys Environmental Justice mapping tool Ejscreen, and can be found in the data folder in this repository. 
 
 ### Authors and Contributors
 Main Author: Lucian Scher
