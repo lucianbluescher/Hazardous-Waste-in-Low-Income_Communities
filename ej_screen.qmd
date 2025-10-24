@@ -1,6 +1,6 @@
 ---
-title: "Homework 1"
-subtitle: "Identifying Hazardous Waste concentration in Low income communites in Plumas County"
+title: "Identifying Hazardous Waste concentration in Low income communites in Plumas County"
+subtitle: "EDS 223 - Homework 1"
 date: "10/22/25"
 author: "Lucian Scher"
 format: pdf
@@ -29,7 +29,7 @@ library(tmap) # for static and interactive maps
 #| message: false
 #| warning: false
 # read in geodatabase of EJScreen data at the Census Block Group level
-ejscreen <- sf::st_read(here::here("data", "ejscreen","EJSCREEN_2023_BG_StatePct_with_AS_CNMI_GU_VI.gdb")) 
+ejscreen <- sf::st_read(here::here("data", "ejscreen","EJSCREEN_2023_BG_StatePct_with_AS_CNMI_GU_VI.gdb"), quiet = TRUE) 
 
 ```
 
@@ -49,8 +49,6 @@ plumas <- ejscreen %>%
 # find the average values for all variables within counties
 california_counties <- aggregate(california, by = list(california$CNTY_NAME), FUN = mean)
 ```
-
-## 4. Data Exploration
 
 ```{r, include=FALSE}
 #class(plumas)
@@ -106,7 +104,7 @@ map2 <- tm_shape(plumas) +
   tm_graticules() +
   tm_polygons(
   fill = "PTSDF",
-  fill.legend = tm_legend(title = "Proximity to Hazardous Waste"),
+  fill.legend = tm_legend(title = "Hazardous Waste Facilities within 5km"),
   col = "gray70") +
 # Title 
 tm_title(
