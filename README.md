@@ -16,6 +16,7 @@ Huge thank you to Annie our TA for helping me with this assignment.
 
 Open the pdf view project without downloading the data. Or run the qmd file to reproduce the project.
 
+```
 EDS223-HW1
 │   README.md               # README
 │   ej_screen.qmd           # Markdown project file
@@ -24,3 +25,4 @@ EDS223-HW1
 |   ej_screen_files         # Render files
 └───data              
      └───ejscreen           # Spatial data used here in .gdb
+```
